@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">65gb</string>
+    <string name="first_name">Name</string>
+    <string name="number">number</string>
+    <string name="email">email</string>
+    <string name="description">description</string>
+    <string name="title_details_contact">Детали контактов</string>
+    <string name="title_your_contacts">Список контактов</string>
 </resources>

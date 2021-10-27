@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/name_view"
+        android:id="@+id/nameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/horizontal_margin"
@@ -25,41 +25,40 @@
         android:text="@string/first_name"
         android:textSize="@dimen/largeText"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/number_view"
+        android:id="@+id/numberView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/horizontal_margin"
-        android:text="@string/number"
+        android:text="@string/first_number"
         android:textSize="@dimen/normalText"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/number_view2"
+        android:id="@+id/numberView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/number"
+        android:text="@string/second_number"
         android:textSize="@dimen/normalText"
-        app:layout_constraintTop_toBottomOf="@+id/number_view" />
+        app:layout_constraintTop_toBottomOf="@+id/numberView" />
 
     <TextView
-        android:id="@+id/email_view"
+        android:id="@+id/emailView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/email"
+        android:text="@string/first_email"
         android:textSize="@dimen/normalText"
-        app:layout_constraintTop_toBottomOf="@+id/number_view2" />
+        app:layout_constraintTop_toBottomOf="@+id/numberView2" />
 
     <TextView
-        android:id="@+id/email_view2"
+        android:id="@+id/emailView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/email"
+        android:text="@string/second_email"
         android:textSize="@dimen/normalText"
-        app:layout_constraintTop_toBottomOf="@+id/email_view" />
+        app:layout_constraintTop_toBottomOf="@+id/emailView" />
 
     <TextView
         android:id="@+id/description_view"
@@ -67,5 +66,5 @@
         android:layout_height="wrap_content"
         android:text="@string/description"
         android:textSize="@dimen/normalText"
-        app:layout_constraintTop_toBottomOf="@+id/email_view2" />
+        app:layout_constraintTop_toBottomOf="@+id/emailView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

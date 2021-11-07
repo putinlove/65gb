@@ -14,38 +14,58 @@ private const val CONTACT_ID = "id"
 class ContactListFragment : Fragment() {
 
     private var binding: FragmentContactListBinding? = null
-    private var contactDetailsListener: Connection? = null
+    private var contactDetailsListener: ContactDetailsListener? = null
+    private var contactService: ServiceInterface? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        contactDetailsListener = context as Connection
+        contactService = context as ServiceInterface
+        contactDetailsListener = context as ContactDetailsListener
+        getContactList()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentContactListBinding.inflate(layoutInflater)
-        return binding?.root
-    }
+    ): View = FragmentContactListBinding.inflate(inflater, container, false)
+        .apply { binding = this }.root
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (contactDetailsListener as AppCompatActivity).supportActionBar?.title =
+        (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_your_contacts)
         binding?.contactCell?.setOnClickListener {
             contactDetailsListener?.showContactDetailsFragment(CONTACT_ID)
         }
+        getContactList()
     }
 
-    override fun onDetach() {
-        contactDetailsListener = null
-        super.onDetach()
+    private val callback = object : ContactListLoadListener {
+        override fun onContactListLoaded(list: List<ContactModel>) {
+            requireActivity().runOnUiThread {
+                binding?.apply {
+                    imageView.setImageResource(list[0].photoResourceId)
+                    nameView.text = list[0].contactName
+                    numberView.text = list[0].number
+                }
+            }
+        }
+    }
+
+    private fun getContactList() {
+        contactService?.getService()?.getContactList(callback)
     }
 
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    override fun onDetach() {
+        contactDetailsListener = null
+        contactService = null
+        super.onDetach()
     }
 }

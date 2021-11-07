@@ -1,8 +1,10 @@
 <resources>
     <string name="first_name">Name</string>
-    <string name="number">number</string>
-    <string name="email">email</string>
+    <string name="first_number">number</string>
+    <string name="first_email">email</string>
     <string name="description">description</string>
     <string name="title_details_contact">Детали контактов</string>
     <string name="title_your_contacts">Список контактов</string>
+    <string name="second_number">2 number</string>
+    <string name="second_email">2 email</string>
 </resources>

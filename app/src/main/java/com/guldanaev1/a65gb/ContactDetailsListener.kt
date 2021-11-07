@@ -1,5 +1,5 @@
 package com.guldanaev1.a65gb
 
-interface Connection {
+interface ContactDetailsListener {
     fun showContactDetailsFragment(id: String)
 }

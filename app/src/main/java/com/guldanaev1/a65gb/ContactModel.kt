@@ -6,6 +6,7 @@ data class ContactModel(
     val number: String,
     val email: String,
     val description: String,
+    val birthday: String,
 )
 
 val contactsList = listOf(
@@ -15,5 +16,6 @@ val contactsList = listOf(
         number = "89128491077",
         email = "test@mail.ru",
         description = "test@mail.ru",
+        "29/02/2000",
     )
 )

@@ -28,7 +28,8 @@ class ContactDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = FragmentContactDetailBinding.inflate(inflater, container, false)
-        .apply { binding = this }.root
+        .apply { binding = this }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +37,7 @@ class ContactDetailsFragment : Fragment() {
             getString(R.string.title_details_contact)
         id = requireArguments().getInt(CONTACT_ID)
         getContactDetails()
+        binding?.switchNotify?.isChecked = AlarmUtils.setSwitchState(requireContext(),"0")
     }
 
     private val callback = object : ContactDetailsLoadListener {
@@ -47,13 +49,28 @@ class ContactDetailsFragment : Fragment() {
                     numberView.text = contact.number
                     emailView.text = contact.email
                     descriptionView.text = contact.description
+                    birthdayView.text = contact.birthday
+                }
+                binding?.let { binding ->
+                    binding.switchNotify.setOnClickListener {
+                        if (binding.switchNotify.isChecked) {
+                            AlarmUtils.setupAlarm(
+                                requireContext(),
+                                contact.contactName,
+                                contact.contactId,
+                                contact.birthday
+                            )
+                        } else {
+                            AlarmUtils.cancelAlarm(requireContext(), contact.contactId)
+                        }
+                    }
                 }
             }
         }
     }
 
     private fun getContactDetails() {
-        contactService?.getService()?.getContactDetails(id!!,callback)
+        contactService?.getService()?.getContactDetails(id!!, callback)
     }
 
     override fun onDestroyView() {

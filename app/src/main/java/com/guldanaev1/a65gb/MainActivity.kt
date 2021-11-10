@@ -22,7 +22,11 @@ class MainActivity : AppCompatActivity(), ContactDetailsListener, ServiceInterfa
             val binder = service as ContactService.ContactBinder
             contactService = binder.getService()
             bound = true
-            if (!savedInstance) {
+            val id = intent.getStringExtra("id")
+            if (id != null && !savedInstance) {
+                showContactListFragment()
+                showContactDetailsFragment(id)
+            } else if (!savedInstance) {
                 showContactListFragment()
             }
         }
@@ -37,7 +41,6 @@ class MainActivity : AppCompatActivity(), ContactDetailsListener, ServiceInterfa
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
         setSupportActionBar(binding?.mainToolbar)
-
         if (savedInstanceState == null) {
             savedInstance = false
         }

@@ -21,7 +21,6 @@ class ContactListFragment : Fragment() {
         super.onAttach(context)
         contactService = context as ServiceInterface
         contactDetailsListener = context as ContactDetailsListener
-        getContactList()
     }
 
     override fun onCreateView(

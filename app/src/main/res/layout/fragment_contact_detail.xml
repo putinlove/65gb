@@ -61,10 +61,33 @@
         app:layout_constraintTop_toBottomOf="@+id/emailView" />
 
     <TextView
-        android:id="@+id/description_view"
+        android:id="@+id/descriptionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/description"
         android:textSize="@dimen/normalText"
         app:layout_constraintTop_toBottomOf="@+id/emailView2" />
+
+    <Switch
+        android:id="@+id/switchNotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:text="@string/notification_on"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/nameView"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        tools:layout_editor_absoluteY="57dp" />
+
+    <TextView
+        android:id="@+id/birthdayView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:text="@string/date_birthday"
+        app:layout_constraintStart_toEndOf="@+id/nameView"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

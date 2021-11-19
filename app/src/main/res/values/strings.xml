@@ -7,4 +7,8 @@
     <string name="title_your_contacts">Список контактов</string>
     <string name="second_number">2 number</string>
     <string name="second_email">2 email</string>
+    <string name="birthday_notification_channel_id">birthday_notification_channel</string>
+    <string name="notification_title">Уведомление</string>
+    <string name="notification_on">Напоминать</string>
+    <string name="date_birthday">TextView</string>
 </resources>

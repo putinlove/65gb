@@ -1,6 +1,7 @@
 package com.guldanaev1.a65gb
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.guldanaev1.a65gb.databinding.FragmentContactListBinding
 
-private const val CONTACT_ID = "id"
-
 class ContactListFragment : Fragment() {
-
     private var binding: FragmentContactListBinding? = null
     private var contactDetailsListener: ContactDetailsListener? = null
     private var contactService: ServiceInterface? = null
+    private lateinit var contactId: String
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -36,19 +35,25 @@ class ContactListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_your_contacts)
         binding?.contactCell?.setOnClickListener {
-            contactDetailsListener?.showContactDetailsFragment(CONTACT_ID)
+            contactDetailsListener?.showContactDetailsFragment(contactId)
         }
         getContactList()
     }
 
     private val callback = object : ContactListLoadListener {
-        override fun onContactListLoaded(list: List<ContactModel>) {
+        override fun onContactListLoaded(contacts: List<ContactModel>) {
             requireActivity().runOnUiThread {
                 binding?.apply {
-                    imageView.setImageResource(list[0].photoResourceId)
-                    nameView.text = list[0].contactName
-                    numberView.text = list[0].number
+                    nameView.text = contacts[0].contactName
+                    contactId = contacts[0].id
+                    if (contacts[0].numberList.isNotEmpty()) {
+                        numberView.text = contacts[0].numberList[0]
+                    }
+                    if(contacts[0].photoResource != null) {
+                        imageView.setImageURI(Uri.parse(contacts[0].photoResource))
+                    }
                 }
+
             }
         }
     }

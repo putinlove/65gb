@@ -16,15 +16,15 @@ class ContactService : Service() {
         val weakReference = WeakReference(callback)
         thread(start = true) {
             Thread.sleep(1000)
-            weakReference.get()?.onContactListLoaded(contactsList)
+            weakReference.get()?.onContactListLoaded(ContactResolver.getContactList(this))
         }
     }
 
-    fun getContactDetails(id: Int, callback: ContactDetailsLoadListener)  {
+    fun getContactDetails(id: String, callback: ContactDetailsLoadListener) {
         val weakReference = WeakReference(callback)
         thread(start = true) {
             Thread.sleep(1000)
-            weakReference.get()?.onContactDetailsLoaded(contactsList[id])
+            weakReference.get()?.onContactDetailsLoaded(ContactResolver.getContactDetails(this, id))
         }
     }
 

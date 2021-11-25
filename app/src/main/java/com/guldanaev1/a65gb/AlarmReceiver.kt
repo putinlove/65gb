@@ -14,16 +14,14 @@ import androidx.core.app.NotificationManagerCompat
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val notifyBody: String = intent.getStringExtra("name").toString()
-        val id: String = intent.getStringExtra("id").toString()
-        val date: String? = intent.getStringExtra("date")
+        val notifyBody = intent.getStringExtra(NAME).toString()
+        val id = intent.getStringExtra(ID).toString()
+        val date = intent.getStringExtra(DATE)
         val intentMainActivity = Intent(context, MainActivity::class.java).apply {
-            putExtra("id", id)
+            putExtra(ID, id)
         }
         createNotification(context, intentMainActivity, notifyBody, id)
         createNotificationChannel(context)
-
-
         val alarmMgr: AlarmManager? =
             context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmIntent = PendingIntent.getBroadcast(
@@ -78,5 +76,11 @@ class AlarmReceiver : BroadcastReceiver() {
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
         }
+    }
+
+    companion object {
+        const val NAME = "name"
+        const val ID = "id"
+        const val DATE = "date"
     }
 }

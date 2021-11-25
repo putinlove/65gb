@@ -4,6 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.guldanaev1.a65gb.AlarmReceiver.Companion.DATE
+import com.guldanaev1.a65gb.AlarmReceiver.Companion.ID
+import com.guldanaev1.a65gb.AlarmReceiver.Companion.NAME
 
 object AlarmUtils {
     fun setupAlarm(
@@ -13,11 +16,11 @@ object AlarmUtils {
         contactBirthday: String?
     ) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val notifyBody = "Сегодня день рождение у $contactName"
+        val notifyBody = context.getString(R.string.notification_text, contactName)
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("name", notifyBody)
-            putExtra("id", contactId)
-            putExtra("date", contactBirthday)
+            putExtra(NAME, notifyBody)
+            putExtra(ID, contactId)
+            putExtra(DATE, contactBirthday)
         }
         val existingIntent = PendingIntent.getBroadcast(
             context,

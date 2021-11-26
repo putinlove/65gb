@@ -2,9 +2,7 @@ package com.guldanaev1.a65gb
 
 import android.content.Context
 import android.database.Cursor
-import android.provider.ContactsContract.Contacts
-import android.provider.ContactsContract.CommonDataKinds
-import android.provider.ContactsContract.Data
+import android.provider.ContactsContract.*
 
 private const val NUMBERS_SELECTION = CommonDataKinds.Phone.CONTACT_ID + " =?"
 private const val EMAILS_SELECTION = CommonDataKinds.Email.CONTACT_ID + " =?"
@@ -18,8 +16,8 @@ private const val BIRTHDAY_DATE_SELECTION = Data.CONTACT_ID + "=?" +
         " = " + CommonDataKinds.Event.TYPE_BIRTHDAY
 private const val CONTACTS_SELECTION = Contacts._ID + " =?"
 
-object ContactResolver {
-    private fun getContactNumbers(context: Context, id: String): List<String> {
+class ContactResolver(private val context: Context) {
+    private fun getContactNumbers(id: String): List<String> {
         val numbers = mutableListOf<String>()
         val phoneUri = CommonDataKinds.Phone.CONTENT_URI
         context.contentResolver?.query(
@@ -39,7 +37,7 @@ object ContactResolver {
         return numbers
     }
 
-    private fun getContactEmails(context: Context, id: String): List<String> {
+    private fun getContactEmails(id: String): List<String> {
         val emails = mutableListOf<String>()
         val emailUri = CommonDataKinds.Email.CONTENT_URI
         context.contentResolver?.query(
@@ -59,7 +57,7 @@ object ContactResolver {
         return emails
     }
 
-    private fun getContactDescription(context: Context, id: String): String {
+    private fun getContactDescription(id: String): String {
         var note = "-"
         context.contentResolver?.query(
             Data.CONTENT_URI,
@@ -77,7 +75,7 @@ object ContactResolver {
         return note
     }
 
-    private fun getContactBirthdayDate(context: Context, id: String): String? {
+    private fun getContactBirthdayDate(id: String): String? {
         var birthday: String? = null
         context.contentResolver?.query(
             Data.CONTENT_URI,
@@ -93,7 +91,7 @@ object ContactResolver {
         return birthday
     }
 
-    fun getContactList(context: Context): List<ContactModel> {
+    fun getContactList(query: String): List<ContactModel> {
         val contactList = mutableListOf<ContactModel>()
         val contactsUri = Contacts.CONTENT_URI
         context.contentResolver?.query(
@@ -113,24 +111,25 @@ object ContactResolver {
                 val name = it.getString(
                     it.getColumnIndexOrThrow(Contacts.DISPLAY_NAME)
                 )
-                val number = getContactNumbers(context, id)
-                contactList.add(
-                    ContactModel(
-                        photoResource = image,
-                        contactName = name,
-                        numberList = number,
-                        emailList = null,
-                        birthday = null,
-                        description = null,
-                        id = id
+                val number = getContactNumbers(id)
+                if (name.uppercase().contains(query.uppercase()))
+                    contactList.add(
+                        ContactModel(
+                            photoResource = image,
+                            contactName = name,
+                            numberList = number,
+                            emailList = null,
+                            birthday = null,
+                            description = null,
+                            id = id
+                        )
                     )
-                )
             }
         }
         return contactList
     }
 
-    fun getContactDetails(context: Context, id: String): ContactModel? {
+    fun getContactDetails(id: String): ContactModel? {
         val contact: ContactModel? = null
         val contactsUri = Contacts.CONTENT_URI
         context.contentResolver?.query(
@@ -147,10 +146,10 @@ object ContactResolver {
                 val name = it.getString(
                     it.getColumnIndexOrThrow(Contacts.DISPLAY_NAME)
                 )
-                val numbers: List<String> = getContactNumbers(context, id)
-                val emails: List<String> = getContactEmails(context, id)
-                val birthday = getContactBirthdayDate(context, id)
-                val note = getContactDescription(context, id)
+                val numbers: List<String> = getContactNumbers(id)
+                val emails: List<String> = getContactEmails(id)
+                val birthday = getContactBirthdayDate(id)
+                val note = getContactDescription(id)
                 return ContactModel(
                     photoResource = image,
                     contactName = name,

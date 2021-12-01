@@ -1,6 +1,5 @@
 package com.guldanaev1.a65gb
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,17 +9,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.guldanaev1.a65gb.databinding.FragmentContactDetailBinding
 
 class ContactDetailsFragment : Fragment() {
 
     private val contactId: String by lazy { requireArguments().getString(CONTACT_ID).toString() }
     private var binding: FragmentContactDetailBinding? = null
-    private var contactService: ServiceInterface? = null
+    private val viewModelContactDetails: ContactDetailsViewModel by viewModels()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        contactService = context as ServiceInterface
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelContactDetails.requestContactDetails(contactId)
     }
 
     override fun onCreateView(
@@ -35,16 +36,13 @@ class ContactDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_details_contact)
-        getContactDetails()
-        binding?.switchNotify?.isChecked = AlarmUtils.setSwitchState(requireContext(), contactId)
-    }
-
-    private val callback = object : ContactDetailsLoadListener {
-        override fun onContactDetailsLoaded(contact: ContactModel?) {
-            requireActivity().runOnUiThread {
+        viewModelContactDetails.contactDetails.observe(
+            viewLifecycleOwner,
+            Observer<ContactModel> { contact ->
                 binding?.apply {
                     if (contact == null) {
-                        Toast.makeText(context, R.string.contact_toast, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, R.string.contact_toast, Toast.LENGTH_LONG)
+                            .show()
                     } else {
                         nameView.text = contact.contactName
                         if (contact.numberList.isNotEmpty()) {
@@ -84,22 +82,14 @@ class ContactDetailsFragment : Fragment() {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private fun getContactDetails() {
-        contactService?.getService()?.getContactDetails(contactId, callback)
+                binding?.switchNotify?.isChecked =
+                    AlarmUtils.setSwitchState(requireContext(), contactId)
+            })
     }
 
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
-    }
-
-    override fun onDetach() {
-        contactService = null
-        super.onDetach()
     }
 
     companion object {

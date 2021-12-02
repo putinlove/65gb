@@ -28,20 +28,7 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             when {
                 granted -> {
-                    val contactsAdapter =
-                        ContactListAdapter { contacts -> adapterOnClick(contacts) }
-                    binding?.let { binding ->
-                        val contactListRecyclerView = binding.recyclerView
-                        contactListRecyclerView.layoutManager =
-                            LinearLayoutManager(requireContext())
-                        contactListRecyclerView.adapter = contactsAdapter
-                        contactListRecyclerView.addItemDecoration(SimpleOffsetDrawer(4))
-                        viewModelContactList.requestContactList("")
-                        viewModelContactList.contactList.observe(viewLifecycleOwner, {
-                            contactsAdapter.submitList(it)
-                        })
-                        setHasOptionsMenu(true)
-                    }
+                    viewModelContactList.requestContactList("")
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -54,7 +41,7 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
             }
         }
-    
+
 
     private fun showNoContactRationale() {
         binding?.fragmentList?.let {
@@ -80,19 +67,12 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         searchView?.setOnQueryTextListener(this)
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
-    }
-
+    override fun onQueryTextSubmit(query: String?): Boolean = false
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText != null) {
             viewModelContactList.requestContactList(newText)
         }
         return true
-    }
-
-    private fun adapterOnClick(contacts: ContactModel) {
-        contactDetailsListener?.showContactDetailsFragment(contacts.id)
     }
 
     override fun onAttach(context: Context) {
@@ -107,11 +87,25 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View = FragmentContactListBinding.inflate(inflater, container, false)
         .apply { binding = this }.root
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_your_contacts)
+        val contactsAdapter =
+            ContactListAdapter { contact ->
+                contactDetailsListener?.showContactDetailsFragment(contact.id)
+            }
+        with(binding!!.recyclerView) {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = contactsAdapter
+            addItemDecoration(SimpleOffsetDrawerItemDecoration(offset = resources.getDimensionPixelSize(
+                        R.dimen.main_padding
+                    )))
+        }
+        viewModelContactList.contactList.observe(viewLifecycleOwner, {
+            contactsAdapter.submitList(it)
+        })
+        setHasOptionsMenu(true)
         requestPermission()
     }
 

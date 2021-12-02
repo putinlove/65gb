@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class SimpleOffsetDrawer(
+class SimpleOffsetDrawerItemDecoration(
     private val left: Int = 0,
     private val top: Int = 0,
     private val right: Int = 0,

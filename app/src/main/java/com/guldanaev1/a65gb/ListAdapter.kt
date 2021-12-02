@@ -8,15 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.guldanaev1.a65gb.databinding.RecylerviewItemContactListBinding
 
-class ContactListAdapter(private val onClick: (ContactModel) -> Unit) :
+class ContactListAdapter(private val onClickListener: (ContactModel) -> Unit) :
     ListAdapter<ContactModel, ContactListAdapter.ContactListViewHolder>(ContactDiffCallback) {
 
     class ContactListViewHolder(
         binding: RecylerviewItemContactListBinding,
-        val onClick: (ContactModel) -> Unit
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        private val imageViewRecycler = binding.imageView
+        val onClickListener: (ContactModel) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private val imageView = binding.imageView
         private val numberView = binding.numberView
         private val nameView = binding.nameView
         private var currentContactModel: ContactModel? = null
@@ -24,7 +23,7 @@ class ContactListAdapter(private val onClick: (ContactModel) -> Unit) :
         init {
             itemView.setOnClickListener {
                 currentContactModel?.let {
-                    onClick(it)
+                    onClickListener(it)
                 }
             }
         }
@@ -34,15 +33,17 @@ class ContactListAdapter(private val onClick: (ContactModel) -> Unit) :
             numberView.text = contact.numberList[0]
             nameView.text = contact.contactName
             if (contact.photoResource != null) {
-                imageViewRecycler.setImageURI(Uri.parse(contact.photoResource))
+                imageView.setImageURI(Uri.parse(contact.photoResource))
+            } else {
+                imageView.setImageResource((R.drawable.ic_launcher_background))
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactListViewHolder {
-        val view = LayoutInflater.from(parent.context)
-        val binding = RecylerviewItemContactListBinding.inflate(view, parent, false)
-        return ContactListViewHolder(binding, onClick)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = RecylerviewItemContactListBinding.inflate(inflater, parent, false)
+        return ContactListViewHolder(binding, onClickListener)
     }
 
     override fun onBindViewHolder(holder: ContactListViewHolder, position: Int) {
@@ -53,11 +54,11 @@ class ContactListAdapter(private val onClick: (ContactModel) -> Unit) :
 
 object ContactDiffCallback : DiffUtil.ItemCallback<ContactModel>() {
     override fun areItemsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {
-        return oldItem.id == newItem.id && (oldItem.contactName == newItem.contactName)
-                && (oldItem.numberList == newItem.numberList)
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {
-        return oldItem == newItem
+        return (oldItem.contactName == newItem.contactName)
+                && (oldItem.numberList == newItem.numberList)
     }
 }

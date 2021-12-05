@@ -7,9 +7,9 @@ import kotlin.concurrent.thread
 class ContactRepository(context: Context) {
     private val contactResolver = ContactResolver(context)
     val mutableContactList = MutableLiveData<List<ContactModel>>()
-    fun loadContactList() {
+    fun loadContactList(query: String) {
         thread(start = true) {
-            mutableContactList.postValue(contactResolver.getContactList())
+            mutableContactList.postValue(contactResolver.getContactList(query))
         }
     }
 

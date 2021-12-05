@@ -8,7 +8,7 @@ class ContactListViewModel(application: Application) : AndroidViewModel(applicat
     private val contactProviderRepository = ContactRepository(application)
     val contactList = contactProviderRepository.mutableContactList as LiveData<List<ContactModel>>
 
-    fun requestContactList() {
-        contactProviderRepository.loadContactList()
+    fun requestContactList(query:String) {
+        contactProviderRepository.loadContactList(query)
     }
 }

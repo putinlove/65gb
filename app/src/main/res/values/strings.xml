@@ -13,10 +13,9 @@
     <string name="notification_text">Сегодня день рождение у: %1$s</string>
     <string name="contacts_rationale_title">Доступ к контактам</string>
     <string name="contacts_rationale_text">Для загрузки списка контактов необходимо разрешение</string>
-    <string name="contact_rationale_button_yes">Разрешить</string>
     <string name="contact_rationale_button_settings">Настройки</string>
-    <string name="contact_rationale_button_no">Запретить</string>
     <string name="contact_birthday">День рождения: </string>
     <string name="denied_toast">Доступ запрещен</string>
     <string name="contact_toast">Контакт не найден</string>
+    <string name="search_title">Поиск</string>
 </resources>

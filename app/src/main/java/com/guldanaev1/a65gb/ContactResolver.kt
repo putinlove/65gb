@@ -91,7 +91,7 @@ class ContactResolver(private val context: Context) {
         return birthday
     }
 
-    fun getContactList(): List<ContactModel> {
+    fun getContactList(query: String): List<ContactModel> {
         val contactList = mutableListOf<ContactModel>()
         val contactsUri = Contacts.CONTENT_URI
         context.contentResolver?.query(
@@ -112,17 +112,18 @@ class ContactResolver(private val context: Context) {
                     it.getColumnIndexOrThrow(Contacts.DISPLAY_NAME)
                 )
                 val number = getContactNumbers(id)
-                contactList.add(
-                    ContactModel(
-                        photoResource = image,
-                        contactName = name,
-                        numberList = number,
-                        emailList = null,
-                        birthday = null,
-                        description = null,
-                        id = id
+                if (name.uppercase().contains(query.uppercase()))
+                    contactList.add(
+                        ContactModel(
+                            photoResource = image,
+                            contactName = name,
+                            numberList = number,
+                            emailList = null,
+                            birthday = null,
+                            description = null,
+                            id = id
+                        )
                     )
-                )
             }
         }
         return contactList

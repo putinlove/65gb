@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -85,6 +86,9 @@ class ContactDetailsFragment : Fragment() {
                 binding?.switchNotify?.isChecked =
                     AlarmUtils.setSwitchState(requireContext(), contactId)
             })
+        viewModelContactDetails.isLoading.observe(viewLifecycleOwner, { isLoading ->
+            binding?.progressBar?.isVisible = isLoading
+        })
     }
 
     override fun onDestroyView() {

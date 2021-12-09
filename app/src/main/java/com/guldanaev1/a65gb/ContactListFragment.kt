@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,14 +35,13 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
                     requireActivity(),
                     Manifest.permission.READ_CONTACTS
                 ) -> {
-                    requestPermission()
+                    checkPermissionsAndRequestContactList()
                 }
                 else -> {
                     showNoContactRationale()
                 }
             }
         }
-
 
     private fun showNoContactRationale() {
         binding?.fragmentList?.let {
@@ -56,7 +56,7 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    private fun requestPermission() {
+    private fun checkPermissionsAndRequestContactList() {
         readContactsPermission.launch(Manifest.permission.READ_CONTACTS)
     }
 
@@ -98,15 +98,22 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         with(binding!!.recyclerView) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = contactsAdapter
-            addItemDecoration(SimpleOffsetDrawerItemDecoration(offset = resources.getDimensionPixelSize(
+            addItemDecoration(
+                SimpleOffsetDrawerItemDecoration(
+                    offset = resources.getDimensionPixelSize(
                         R.dimen.main_padding
-                    )))
+                    )
+                )
+            )
         }
         viewModelContactList.contactList.observe(viewLifecycleOwner, {
             contactsAdapter.submitList(it)
         })
+        viewModelContactList.isLoading.observe(viewLifecycleOwner, { isLoading ->
+            binding?.progressBar?.isVisible = isLoading
+        })
         setHasOptionsMenu(true)
-        requestPermission()
+        checkPermissionsAndRequestContactList()
     }
 
     override fun onDestroyView() {

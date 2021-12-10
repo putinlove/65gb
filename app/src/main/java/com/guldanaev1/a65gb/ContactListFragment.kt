@@ -14,16 +14,22 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.guldanaev1.a65gb.databinding.FragmentContactListBinding
+import com.guldanaev1.a65gb.di.ContactListModule
+import javax.inject.Inject
 
 private const val URI_PACKAGE_SCHEME = "package:"
 
 class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModelContactList: ContactListViewModel by viewModels { viewModelFactory }
     private var binding: FragmentContactListBinding? = null
     private var contactDetailsListener: ContactDetailsListener? = null
-    private val viewModelContactList: ContactListViewModel by viewModels()
 
     private val readContactsPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -54,6 +60,14 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
                     startActivity(appSettingsIntent)
                 }.show()
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as ContactApplication)
+            .appComponent
+            .plusContactListComponent(ContactListModule())
+            .inject(this)
     }
 
     private fun checkPermissionsAndRequestContactList() {

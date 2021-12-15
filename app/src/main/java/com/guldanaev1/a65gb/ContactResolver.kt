@@ -3,6 +3,7 @@ package com.guldanaev1.a65gb
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract.*
+import javax.inject.Inject
 
 private const val NUMBERS_SELECTION = CommonDataKinds.Phone.CONTACT_ID + " =?"
 private const val EMAILS_SELECTION = CommonDataKinds.Email.CONTACT_ID + " =?"
@@ -16,7 +17,7 @@ private const val BIRTHDAY_DATE_SELECTION = Data.CONTACT_ID + "=?" +
         " = " + CommonDataKinds.Event.TYPE_BIRTHDAY
 private const val CONTACTS_SELECTION = Contacts._ID + " =?"
 
-class ContactResolver(private val context: Context) {
+class ContactResolver @Inject constructor(val context: Context) {
     private fun getContactNumbers(id: String): List<String> {
         val numbers = mutableListOf<String>()
         val phoneUri = CommonDataKinds.Phone.CONTENT_URI

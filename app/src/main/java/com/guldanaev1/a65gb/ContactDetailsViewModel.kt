@@ -1,16 +1,15 @@
 package com.guldanaev1.a65gb
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
-class ContactDetailsViewModel(application: Application) : AndroidViewModel(application) {
-    private val contactProviderRepository = ContactRepository(application)
+class ContactDetailsViewModel @Inject constructor(private val repository: ContactRepository) : ViewModel() {
     private val mutableContactDetails = MutableLiveData<ContactModel>()
     val contactDetails = mutableContactDetails as LiveData<ContactModel>
     private val mutableIsLoading: MutableLiveData<Boolean> = MutableLiveData()
@@ -24,7 +23,7 @@ class ContactDetailsViewModel(application: Application) : AndroidViewModel(appli
 
     fun requestContactDetails(id: String) {
         disposable?.dispose()
-        disposable = (contactProviderRepository.loadContactDetails(id)
+        disposable = (repository.loadContactDetails(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { mutableIsLoading.postValue(true) }

@@ -12,16 +12,25 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.guldanaev1.a65gb.databinding.FragmentContactDetailBinding
+import com.guldanaev1.a65gb.di.ContactDetailsModule
+import javax.inject.Inject
 
 class ContactDetailsFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModelContactDetails: ContactDetailsViewModel by viewModels { viewModelFactory }
     private val contactId: String by lazy { requireArguments().getString(CONTACT_ID).toString() }
     private var binding: FragmentContactDetailBinding? = null
-    private val viewModelContactDetails: ContactDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (activity?.application as ContactApplication)
+            .appComponent
+            .plusContactDetailsComponent(ContactDetailsModule())
+            .inject(this)
         viewModelContactDetails.requestContactDetails(contactId)
     }
 

@@ -11,9 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name="com.guldanaev1.presentation.receivers.AlarmReceiver" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.guldanaev1.presentation.view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

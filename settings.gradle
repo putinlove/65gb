@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "65gb"
 include ':app'
+include ':presentation'
+include ':domain'
